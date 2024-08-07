@@ -3,7 +3,11 @@
 ## Overview
 
 This project is a microservice architecture that includes a Job microservice, Company microservice, and Review microservice. These services communicate with each other using a variety of technologies, including Docker, OpenFeign, Eureka Client, Config Server, PostgreSQL, RabbitMQ, and Zipkin. The microservices are accessible through an API Gateway.
+![job-microservice](https://github.com/user-attachments/assets/58c8b889-cd79-41ba-a6d6-382f0f2de932)
 
+
+## Documentation URL
+- https://documenter.getpostman.com/view/19877044/2sA3rzKt5c#6c12f10f-fa1e-4113-a568-1744cb39ee0b
 ## Technologies Used
 
 - **Docker**: For containerization of services.
