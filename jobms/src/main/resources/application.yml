@@ -1,0 +1,137 @@
+# Default profile (common settings)
+job-service:
+  url: http://localhost:8082
+
+company-service:
+  url: http://localhost:8081
+
+review-service:
+  url: http://localhost:8083
+
+
+server:
+  port: 8082
+
+spring:
+  application:
+    name: job-service
+#  profiles:
+#    active: prod
+#  config:
+  config:
+    import: optional:configserver:http://localhost:8080
+#    activate:
+#      on-profile: prod
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/jobmsdb
+    driverClassName: org.postgresql.Driver
+    username: your-db-username
+    password: your-db-password
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+
+# Resilience4J
+resilience4j:
+  circuitbreaker:
+    instances:
+      companyBreaker:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        slidingWindowType: COUNT_BASED
+
+# Eureka Discovery Setup
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+# Actuator (common settings)
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9412/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# Development profile
+---
+#spring:
+#  config:
+#    activate:
+#      on-profile: dev
+#  application:
+#    name: job-service
+#  datasource:
+#    url: jdbc:h2:mem:devdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    driverClassName: org.h2.Driver
+#    username: sa
+#    password: password
+#  h2:
+#    console:
+#      enabled: true
+#  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
+#    hibernate:
+#      ddl-auto: update
+#
+#welcome:
+#  message: Welcome to Alexis
+#
+#management:
+#  endpoint:
+#    health:
+#      show-details: always
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+#        exclude: "env,beans"
+
+# Production profile
+---
+#spring:
+#  config:
+#    activate:
+#      on-profile: prod
+#  application:
+#    name: job-service
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/jobmsdb
+#    driverClassName: org.postgresql.Driver
+#    username: postgres
+#    password: 1236Jesus
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    hibernate:
+#      ddl-auto: update
+#
+#welcome:
+#  message: Welcome to Alexis
+#
+#management:
+#  endpoint:
+#    health:
+#      show-details: always
+#      circuitbreakers:
+#        enabled: true
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+#        exclude: "env,beans"

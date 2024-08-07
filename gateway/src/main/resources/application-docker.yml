@@ -1,0 +1,64 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: company-service
+#          uri: lb://COMPANY-SERVICE
+          uri: http://company:8081
+          predicates:
+            - Path=/companies/**
+        - id: job-service
+#          uri: lb://JOB-SERVICE
+          uri: http://job:8082
+          predicates:
+            - Path=/jobs/**
+        - id: review-service
+#          uri: lb://REVIEW-SERVICE
+          uri: http://review:8083
+          predicates:
+            - Path=/reviews/**
+        - id: eureka-server
+          uri: http://servicereg:8761
+          predicates:
+            - Path=/eureka/**
+        #          filters:
+        #            - RewritePath=/eureka/main/(?<segment>/?.*), $\{segment}
+
+        - id: eureka-server-static
+          uri: http://servicereg:8761
+          predicates:
+            Path=/eureka/**
+
+#  profiles:
+#    active: prod
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://servicereg:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+logging:
+  level:
+    root: info
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
+          route:
+            RouteDefinitionLocator: INFO
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0
